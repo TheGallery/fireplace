@@ -3,38 +3,56 @@ define('helpers_local', ['feed', 'nunjucks', 'utils_local', 'z'],
     var filters = nunjucks.require('filters');
     var globals = nunjucks.require('globals');
 
-    var rewriteCdnUrlMappings = [
-        {
-            name: 'Privacy Policy',
-            pattern: /\/media\/docs\/privacy\/.+\.html/g,
-            replacement: '/privacy-policy'
-        },
-        {
-            name: 'Terms of Use',
-            pattern: /\/media\/docs\/terms\/.+\.html/g,
-            replacement: '/terms-of-use'
-        }
-    ];
+    /* Register filters. */
+    filters.feed_app_extras = function(feed_app) {
+        return {
+            type: feed_app.type,
+            image: feed_app.preview.image_url,
+            description: feed_app.description,
+            quote_text: feed_app.pullquote_text,
+            quote_rating: feed_app.pullquote_rating,
+            quote_source: feed_app.pullquote_attribute
+        };
+    };
 
-    globals.feed = feed;
     filters.items = utils_local.items;
 
-    // When we get a page back from legal docs stored on the CDN, we
-    // need to rewrite them to work locally within a packaged version
-    // of Marketplace.
     filters.rewriteCdnUrls = function(text){
+        // When we get a page back from legal docs stored on the CDN, we
+        // need to rewrite them to work locally within a packaged version
+        // of Marketplace.
+        var rewriteCdnUrlMappings = [
+            {
+                name: 'Privacy Policy',
+                pattern: /\/media\/docs\/privacy\/.+\.html/g,
+                replacement: '/privacy-policy'
+            },
+            {
+                name: 'Terms of Use',
+                pattern: /\/media\/docs\/terms\/.+\.html/g,
+                replacement: '/terms-of-use'
+            }
+        ];
         rewriteCdnUrlMappings.forEach(function(mapping){
             text = text.replace(mapping.pattern, mapping.replacement);
         });
         return text;
     };
 
-    // Functions provided in the default context.
+    /* Global variables, provided in default context. */
+    globals.feed = feed;
+
+    /* Helpers functions, provided in the default context. */
+    function indexOf(arr, val) {
+        return arr.indexOf(val);
+    }
+
     var helpers = {
+        indexOf: indexOf
     };
 
-    // Put the helpers into the nunjucks global.
     for (var i in helpers) {
+        // Put the helpers into the nunjucks global.
         if (helpers.hasOwnProperty(i)) {
             globals[i] = helpers[i];
         }
