@@ -1,8 +1,9 @@
-define('helpers_local', ['nunjucks', 'z'], function(nunjucks, z) {
+define('helpers_local', ['feed', 'nunjucks', 'utils_local', 'z'],
+       function(feed, nunjucks, utils_local, z) {
     var filters = nunjucks.require('filters');
     var globals = nunjucks.require('globals');
 
-   var rewriteCdnUrlMappings = [
+    var rewriteCdnUrlMappings = [
         {
             name: 'Privacy Policy',
             pattern: /\/media\/docs\/privacy\/.+\.html/g,
@@ -14,6 +15,9 @@ define('helpers_local', ['nunjucks', 'z'], function(nunjucks, z) {
             replacement: '/terms-of-use'
         }
     ];
+
+    globals.feed = feed;
+    filters.items = utils_local.items;
 
     // When we get a page back from legal docs stored on the CDN, we
     // need to rewrite them to work locally within a packaged version
