@@ -88,7 +88,7 @@ define('models',
                 return do_not_return ? null : data;
             } else {
                 var casted_data = do_cast(data);
-                return do_not_return ? null : casted_data, data;
+                return do_not_return ? null : [casted_data, data];
             }
         }
 
