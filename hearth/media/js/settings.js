@@ -57,6 +57,7 @@ define('settings', ['l10n', 'settings_local', 'underscore'], function(l10n, sett
         model_prototypes: {
             'app': 'slug',
             'category': 'slug',
+            'collection': 'slug',
 
             'feed-app': 'slug',
             'feed-brand': 'slug',
